@@ -1,0 +1,174 @@
+---
+interface Props {
+  src: string
+  title?: string
+  poster?: string
+  width?: number
+  height?: number
+  controls?: boolean
+  autoplay?: boolean
+  muted?: boolean
+  loop?: boolean
+  className?: string
+}
+
+const {
+  src,
+  title = "Video",
+  poster,
+  width = 560,
+  height = 315,
+  controls = true,
+  autoplay = false,
+  muted = false,
+  loop = false,
+  className = "",
+} = Astro.props
+
+// 检测视频类型
+const isBilibili = src.includes('bilibili.com')
+const isYouTube = src.includes('youtube.com') || src.includes('youtu.be')
+const isLocal = !src.startsWith('http') || src.includes(Astro.site?.hostname || '')
+
+// 检查是否是相对路径（以./开头）
+const isRelativePath = src.startsWith('./')
+
+// 提取B站视频ID
+function getBilibiliEmbedUrl(url: string) {
+  try {
+    const bvMatch = url.match(/BV[0-9A-Za-z]+/)
+    if (bvMatch) {
+      return `https://player.bilibili.com/player.html?bvid=${bvMatch[0]}&autoplay=0&muted=0&high_quality=1&danmaku=0`
+    }
+    
+    // 支持av号
+    const avMatch = url.match(/av(\d+)/)
+    if (avMatch) {
+      return `https://player.bilibili.com/player.html?aid=${avMatch[1]}&autoplay=0&muted=0&high_quality=1&danmaku=0`
+    }
+  } catch (error) {
+    console.warn('Failed to parse Bilibili URL:', error)
+  }
+  return url
+}
+
+// 提取YouTube视频ID并转换为嵌入链接
+function getYouTubeEmbedUrl(url: string) {
+  try {
+    let videoId = ''
+    
+    if (url.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(new URL(url).search)
+      videoId = urlParams.get('v') || ''
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0]
+    }
+    
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
+    }
+  } catch (error) {
+    console.warn('Failed to parse YouTube URL:', error)
+  }
+  return url
+}
+
+let embedUrl = src
+if (isBilibili) {
+  embedUrl = getBilibiliEmbedUrl(src)
+} else if (isYouTube) {
+  embedUrl = getYouTubeEmbedUrl(src)
+}
+
+// 如果是相对路径，显示提示信息
+if (isRelativePath) {
+  console.warn(`VideoPlayer: 相对路径 "${src}" 可能无法正常工作。建议将视频文件放在 public/ 目录下，并使用绝对路径（如 "/videos/filename.mp4"）`)
+}
+---
+
+<div class={`video-container ${className}`}>
+  {
+    isBilibili || isYouTube ? (
+      <div class="relative w-full overflow-hidden rounded-lg border border-border bg-secondary/20" style={`aspect-ratio: ${width}/${height}`}>
+        <iframe
+          src={embedUrl}
+          title={title}
+          width={width}
+          height={height}
+          class="absolute top-0 left-0 w-full h-full"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+        />
+      </div>
+    ) : isRelativePath ? (
+      <div class="relative w-full rounded-lg border border-border bg-secondary/20 p-8 text-center">
+        <p class="text-muted-foreground mb-4">
+          ⚠️ 无法加载视频：相对路径不支持
+        </p>
+        <p class="text-sm text-muted-foreground mb-4">
+          请将视频文件移动到 <code class="bg-muted px-2 py-1 rounded">public/videos/</code> 目录，
+          然后使用绝对路径：<code class="bg-muted px-2 py-1 rounded">/videos/{src.replace('./', '')}</code>
+        </p>
+        <a href="#" class="text-primary hover:underline text-sm">
+          了解更多关于静态资源的使用
+        </a>
+      </div>
+    ) : (
+      <video
+        src={src}
+        poster={poster}
+        width={width}
+        height={height}
+        controls={controls}
+        autoplay={autoplay}
+        muted={muted}
+        loop={loop}
+        class="w-full rounded-lg border border-border shadow-sm"
+        preload="metadata"
+        controlslist="nodownload"
+      >
+        <p class="text-muted-foreground text-center p-4">
+          您的浏览器不支持视频播放。
+          <a href={src} class="text-primary hover:underline">
+            点击这里查看视频
+          </a>
+        </p>
+      </video>
+    )
+  }
+  {title && !isLocal && (
+    <p class="text-sm text-muted-foreground text-center mt-2 italic">
+      {title}
+    </p>
+  )}
+</div>
+
+<style>
+  .video-container {
+    @apply mx-auto max-w-full;
+  }
+  
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    /* .video-container {
+      @apply;
+    } */
+    
+    .video-container iframe,
+    .video-container video {
+      @apply w-full h-auto;
+    }
+  }
+  
+  /* 改善iframe的加载效果 */
+  .video-container iframe {
+    @apply transition-opacity duration-300;
+  }
+  
+  /* 视频悬停效果 */
+  .video-container:hover {
+    @apply transform-gpu transition-transform duration-300;
+  }
+</style> 

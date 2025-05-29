@@ -24,6 +24,7 @@ const authorPosts = await getPostsByAuthor(author.id)
     title={`${author.data.name} (Author)`}
     description={author.data.bio || `Profile of ${author.data.name}.`}
   />
+  <div class="mx-auto max-w-screen-md px-4 flex flex-col gap-y-6">
   <Breadcrumbs
     items={[
       { href: '/authors', label: 'Authors', icon: 'lucide:users' },
@@ -54,4 +55,5 @@ const authorPosts = await getPostsByAuthor(author.id)
       )
     }
   </section>
+</div>
 </Layout>

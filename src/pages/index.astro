@@ -2,86 +2,122 @@
 import BlogCard from '@/components/BlogCard.astro'
 import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
+import { Icon } from 'astro-icon/components'
 import { buttonVariants } from '@/components/ui/button'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
 import { getRecentPosts } from '@/lib/data-utils'
-
-const blog = await getRecentPosts(SITE.featuredPostCount)
+import GithubContribution from '@/components/bento/GithubContribution.tsx'
+import WakatimeGraph from '@/components/bento/WakatimeGraph.tsx'
+import WakatimeCalendar from '@/components/bento/WakatimeCalendar.tsx'
+import MusicPlayer from '@/components/bento/MusicPlayer.tsx'
+import Location from '@/components/bento/Location.tsx'
+import { TechStack } from '@/components/bento/TechStack.tsx'
+import CardStack from '@/components/bento/CardStack.tsx'
+import { getCollection } from 'astro:content'
+const latestPost = await getCollection('blog').then((posts) =>
+  posts
+    .sort(
+      (a, b) =>
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+    )
+    .filter((post) => !post.data.draft)
+    .at(0),
+)
 ---
 
 <Layout>
-  <PageHead slot="head" title="Home" />
-  <section>
-    <div class="rounded-lg border">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="text-3xl leading-none font-medium">er·u·dite</h3>
-        <p class="text-muted-foreground text-sm">
-          /ˈer(y)əˌdīt/ &bull; <span class="font-medium">adjective</span>
-        </p>
-      </div>
-      <div class="p-6 pt-0">
-        <p class="text-muted-foreground mb-2 text-sm">
-          astro-erudite is an opinionated, unstyled static blogging template
-          built with <Link
-            href="https://astro.build"
-            class="text-foreground"
-            external
-            underline>Astro</Link
-          >, <Link
-            href="https://tailwindcss.com"
-            class="text-foreground"
-            external
-            underline>Tailwind</Link
-          >, and <Link
-            href="https://ui.shadcn.com"
-            class="text-foreground"
-            external
-            underline>shadcn/ui</Link
-          >. Extraordinarily loosely based on the <Link
-            href="https://astro-micro.vercel.app/"
-            class="text-foreground"
-            external
-            underline>Astro Micro</Link
-          > theme.
-        </p>
-        <p class="text-muted-foreground text-sm">
-          To use this template, check out the <Link
-            href="https://github.com/jktrn/astro-erudite"
-            class="text-foreground"
-            underline
-            external>GitHub</Link
-          > repository. To learn more about why this template exists, read this blog
-          post: <Link
-            href="/blog/the-state-of-static-blogs"
-            class="text-foreground"
-            underline>The State of Static Blogs in 2024</Link
-          >.
-        </p>
-      </div>
+    <PageHead slot="head" title="Home" />
+    <section
+    class="mx-auto grid max-w-[375px] grid-cols-2 gap-4 px-4 [grid-template-areas:'a_a'_'a_a'_'b_d'_'e_c'_'h_h'_'f_g'_'i_j'_'k_l'] *:rounded-3xl *:border *:bg-secondary/25 *:bg-cover *:bg-center *:bg-no-repeat sm:max-w-screen-sm sm:grid-cols-3 sm:[grid-template-areas:'a_a_b'_'a_a_l'_'c_d_d'_'e_f_g'_'h_h_h'_'i_j_k'] xl:max-w-screen-xl xl:grid-cols-4 xl:[grid-template-areas:'a_a_b_l'_'c_d_d_e'_'f_g_g_h'_'i_i_j_h']"
+    >
+    {/* Self Introduction */}
+    <div
+    class="first group relative overflow-hidden rounded-3xl border bg-cover bg-center [grid-area:a] sm:aspect-[2.7/1] xl:aspect-auto"
+    >
+    <div class="relative flex flex-col space-y-2 p-4">
+        <h4 class="text-2xl font-bold">Hi, I'm Serein !</h4>
     </div>
-  </section>
-  <section class="flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Latest posts</h2>
-    <ul class="flex flex-col gap-y-4">
-      {
-        blog.map((post) => (
-          <li>
-            <BlogCard entry={post} />
-          </li>
-        ))
+    <div class="relative p-6 pt-0 text-sm">
+        <p class="mb-2 text-muted-foreground">
+            🎓 A Grade 2020 GST Student in SYSU. Currently a graduate student at SYSU.
+            <br>
+            ⚡ Interested in 3D reconstruction / generation, game development, front-end development.
+            <br>
+            🎮 I am a hardcore anime fan, and I also enjoy playing all kinds of games.
+            <br>
+            🔭 I am learning everything I find interesting.
+        </p>
+    </div>
+    </div>
+
+    {/* Location */}
+    <!-- <div class="group relative flex items-center justify-center overflow-hidden rounded-3xl border [grid-area:b] sm:aspect-square"> -->
+    <div class="relative flex overflow-hidden [grid-area:b]">
+        <Location client:load />
+    </div>
+
+    {/* Tech Stack */}
+    <div class="relative w-full h-full flex overflow-hidden rounded-3xl border [grid-area:l] sm:aspect-[2.1/1]">
+        <TechStack client:load iconSize={30} gapSize={1.2} speed={20} />
+    </div>
+
+    {/* Blog Card */}
+    <div
+      class="has-overlay relative flex aspect-[6/5] items-start overflow-hidden p-4 [grid-area:d] sm:aspect-[2.1/1] sm:items-center xl:aspect-auto"
+    >
+    {
+        latestPost && (
+          <>
+            <img
+              src={latestPost.data.image?.src ?? '#'}
+              alt={latestPost.data.title}
+              width={477}
+              height={251}
+              class="border-border w-[85%] rounded-2xl border"
+            />
+            <Link
+              href={`/blog/${latestPost.id}`}
+              aria-label={`Read blog post: ${latestPost.data.title}`}
+              title={`Read blog post: ${latestPost.data.title}`}
+            >
+              <div class="bg-secondary/50 text-primary hover:ring-primary absolute right-0 bottom-0 m-3 flex w-fit items-end rounded-full border p-3 transition-all duration-300 hover:ring-1 hover:rotate-12">
+                <Icon name="lucide:move-up-right" size={16} />
+              </div>
+            </Link>
+          </>
+        )
       }
-    </ul>
-    <div class="flex justify-center">
-      <Link
-        href="/blog"
-        class={buttonVariants({ variant: 'ghost' }) + ' group'}
-      >
-        See all posts <span
-          class="ml-1.5 transition-transform group-hover:translate-x-1"
-          >&rarr;</span
-        >
-      </Link>
     </div>
-  </section>
+
+    {/* Music Player */}
+    <div class="relative flex aspect-square items-start rounded-3xl border p-4 [grid-area:e] xl:flex xl:aspect-auto">
+        <MusicPlayer client:load />
+    </div>
+
+    {/* Wakatime Graph */}
+    <div class="aspect-square [grid-area:f]">
+        <WakatimeGraph client:load />
+    </div>
+
+    {/* Wakatime Calendar */}
+    <div class="has-overlay relative flex aspect-square items-center justify-center overflow-hidden [grid-area:g] sm:aspect-[2.1/1] xl:aspect-auto">
+        <WakatimeCalendar client:load />
+    </div>
+
+    {/* Kana's Photo */}
+    <div
+      class="group has-overlay relative flex aspect-square items-center justify-center [grid-area:h] xl:bg-[url('/images/kana-light-static.png')] xl:dark:bg-[url('/images/kana-dark-static.png')] xl:bg-cover xl:bg-center xl:bg-no-repeat"
+    >
+      <div
+        class="overlay absolute inset-0 size-full rounded-3xl bg-[url('/images/kana-light-hover.png')] dark:bg-[url('/images/kana-dark-hover.png')] bg-cover bg-center bg-no-repeat transition-opacity duration-300 xl:opacity-0 xl:group-hover:opacity-100 hover:opacity-100"
+      >
+      </div>
+    </div>
+
+    {/* Card Stack Gallery */}
+    <div class="relative flex aspect-square items-center justify-center overflow-hidden [grid-area:c] sm:aspect-[2.1/1] xl:aspect-auto">
+        <CardStack client:load />
+    </div>
+    </section>
 </Layout>

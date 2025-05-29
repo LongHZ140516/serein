@@ -11,9 +11,10 @@ const projects = await getAllProjects()
 
 <Layout>
   <PageHead slot="head" title="About" />
+  <div class="mx-auto max-w-screen-md px-4 flex flex-col gap-y-6">
   <Breadcrumbs items={[{ label: 'About', icon: 'lucide:info' }]} />
 
-  <section>
+  <section class="flex grow flex-col gap-y-6">
     <div class="min-w-full">
       <div class="prose mb-8">
         <p class="mb-4">
@@ -52,4 +53,5 @@ const projects = await getAllProjects()
       </div>
     </div>
   </section>
+  </div>
 </Layout>

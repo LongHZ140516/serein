@@ -1,0 +1,240 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import Layout from '@/layouts/Layout.astro'
+import ItemGrid from '@/components/ItemGrid.astro'
+import { Image } from 'astro:assets'
+
+const title = 'Uses'
+const description = 'This is the equipment I currently use for gaming, programming, making videos, and every day.'
+---
+
+<Layout>
+  <PageHead slot="head" title={title} description={description} />
+  <div class="mx-auto max-w-screen-md px-4 flex flex-col gap-y-5">
+    <Breadcrumbs items={[{ label: 'Uses', icon: 'lucide:monitor' }]} />
+
+    <section class="flex grow flex-col gap-y-8">
+      <div class="min-w-full">
+        <!-- <h1 class="mb-4 text-4xl font-bold">{title}</h1>
+        <p class="text-muted-foreground mb-8">{description}</p> -->
+
+        <div class="prose max-w-none">
+          <!-- Laptop Section -->
+          <h2>Apple Devices</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/apple/mac-mini.png',
+                name: 'Mac Mini',
+                description: 'M4 chip, 24GB RAM, 512GB',
+                url: 'https://www.apple.com/mac-mini/'
+              },
+              {
+                image: '/images/uses/apple/macbook-pro.png',
+                name: 'MacBook Pro 16 inch',
+                description: 'M1 chip, 8GB RAM, 256GB',
+                url: 'https://www.apple.com/macbook-pro/'
+              },
+              {
+                image: '/images/uses/apple/ipad-air.png',
+                name: 'iPad Air 5',
+                description: 'Blue, 13 inch, 256GB',
+                url: 'https://www.apple.com/ipad-air/'
+              },
+              {
+                image: '/images/uses/apple/iphonepro.png',
+                name: 'iPhone 16 Pro',
+                description: 'White, 256GB',
+                url: 'https://www.apple.com/iphone-16-pro/'
+              },
+              {
+                image: '/images/uses/apple/apple-watch.png',
+                name: 'Apple Watch Series 10',
+                description: 'Jet Black, 46mm',
+                url: 'https://www.apple.com/apple-watch-series-10/'
+              },
+              {
+                image: '/images/uses/apple/airpods-pro.png',
+                name: 'AirPods Pro',
+                description: 'Headphone',
+                url: 'https://www.apple.com/airpods-pro/'
+              },
+            ]}
+          />
+
+          <!-- Mouses Section -->
+          <h2>Mouses</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/mouses/rog-harpe-ace.png',
+                name: 'ROG Harpe Ace',
+                description: 'White',
+                url: 'https://rog.asus.com/hk/mice-mouse-pads/mice/ambidextrous/rog-harpe-ace-aim-lab-edition-model/'
+              },
+              {
+                image: '/images/uses/mouses/lamzu.png',
+                name: 'LAMZU ATLANTIS OG V2 PRO',
+                description: 'Polar White',
+                url: 'https://lamzu.com/products/lamzu-atlantis-og-v2-pro-gaming-mouse?variant=41072435691554'
+              },
+              {
+                image: '/images/uses/mouses/vxe-r1.png',
+                name: 'VXE Dragonfly R1SE',
+                description: 'White',
+                url: 'https://www.vxe.com/mouse/r1'
+              },
+              {
+                image: '/images/uses/mouses/logitech-G304.png',
+                name: 'Logitech G304',
+                description: 'White',
+                url: 'https://store.logitech.tw/products/g304'
+              },
+            ]}
+          />
+
+          <!-- Keyboards Section -->
+          <h2>Keyboards</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/keyboards/wave75.png',
+                name: 'PMO Wave 75',
+                description: 'Anodized Red',
+                url: 'https://pmolab.cn/pd.jsp?recommendFromPid=0&id=55&fromMid=422'
+              },
+              {
+                image: '/images/uses/keyboards/rainy75.png',
+                name: 'WOB Rainy75',
+                description: 'Anodized Black',
+                url: 'https://www.wobkey.com/products/rainy75'
+              },
+              {
+                image: '/images/uses/keyboards/lofree.png',
+                name: 'Lofree Flow Lite84',
+                description: 'Off-White',
+                url: 'https://www.lofree.co/products/flow-lite84-mechanical-keyboard?variant=46080169115867'
+              },
+              {
+                image: '/images/uses/keyboards/vgn-v98pro-v2.png',
+                name: 'VGN V98 Pro V2',
+                description: 'Sea Salt',
+                url: 'https://www.vgnlab.com.cn/web/sku-712'
+              },
+              
+            ]}
+          />
+          <!-- Headphones Section -->
+          <h2>Headphones</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/headphones/moondrop-pill.png',
+                name: 'MoonDrop Pill',
+                description: 'Black',
+                url: 'https://moondroplab.com/cn/products/pill'
+              },
+              {
+                image: '/images/uses/headphones/moondrop-lan.png',
+                name: 'MoonDrop LAN',
+                description: 'Silver',
+                url: 'https://moondroplab.com/cn/products/lan'
+              },
+              {
+                image: '/images/uses/headphones/moondrop-chu-II.png',
+                name: 'MoonDrop CHU II',
+                description: 'Black',
+                url: 'https://moondroplab.com/cn/products/chu-ii'
+              }
+            ]}
+          />
+
+          <!-- PC Section -->
+          <h2>PC</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/pc/rog-b760-g.png',
+                name: 'ROG STRIX B760-G GAMING WIFI S小吹雪',
+                description: 'Motherboard',
+                url: 'https://rog.asus.com.cn/motherboards/rog-strix/rog-strix-b760-g-gaming-wifi-s/'
+              },
+              {
+                image: '/images/uses/pc/cpu.png',
+                name: 'Intel® Core™ i7-13700K',
+                description: 'CPU',
+                url: 'https://www.intel.com.tw/content/www/tw/zh/products/sku/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz/specifications.html'
+              },
+              {
+                image: '/images/uses/pc/4080super.png',
+                name: 'GeForce RTX 4080 SUPER 瑷珈',
+                description: 'GPU',
+                url: 'https://www.maxsun.com.cn/2024/0308/6164.html'
+              },
+              {
+                image: '/images/uses/pc/xpg-lancer.png',
+                name: 'XPG LANCER RGB DDR5 吹雪 32GB',
+                description: 'RAM',
+                url: 'https://www.xpg.com/tw/xpg/983'
+              },
+              {
+                image: '/images/uses/pc/VK-SL125.png',
+                name: 'Valkyrie SL-125',
+                description: 'Cooler',
+                url: 'https://www.valkyrie.com.cn/#/pages/showIm/showIm?formData=%7B%22id%22%3A30,%22brandId%22%3A%22SL125%E7%B3%BB%E5%88%97%22,%22typeId%22%3A%22%E9%A3%8E%E5%86%B7%E6%95%A3%E7%83%AD%E5%99%A8%22,%22loopImgs%22%3A%22spu%2Fpc%2Fsl125%2Fsl125w.png%22,%22mainTitle%22%3A%22SL%22,%22subTitle%22%3A%22SL-125W%22,%22showGoods%22%3A%22spu%2Fmb%2Fsl125%2Fsj-sl125w.png%22,%22goodsContent%22%3A%22info%2Fsl%2Fs125v.jpg%22,%22goodsSort%22%3A%2210%22,%22status%22%3A0,%22createTime%22%3A%222023-02-11%2010%3A30%3A38%22,%22invalid%22%3A0,%22spus%22%3A%5B%5D%7D'
+              },
+              {
+                image: '/images/uses/pc/predator-gm7.png',
+                name: 'Predator GM7',
+                description: '2TB SSD',
+                url: 'https://www.predatorstorage.cn/products/id-17.html'
+              },
+              {
+                image: '/images/uses/pc/seagate.png',
+                name: 'Seagate Barracuda 4TB+8TB',
+                description: 'Storage',
+                url: 'https://www.seagate.com/tw/zh/'
+              },
+              {
+                image: '/images/uses/pc/xpg-power-supply.png',
+                name: 'XPG Core Reactor II 850W',
+                description: 'Power Supply',
+                url: 'https://www.xpg.com/tw/xpg/641'
+              },
+              {
+                image: '/images/uses/pc/lianli-lancool-216.png',
+                name: 'Lian Li LANCOOL 216',
+                description: 'Case',
+                url: 'https://lian-li.com/zh-TW/product/lancool-216/'
+              }
+            ]}
+          />
+
+          <!-- Others Section -->
+          <h2>Others</h2>
+          <ItemGrid
+            items={[
+              {
+                image: '/images/uses/others/switch.png',
+                name: 'Nintendo Switch OLED',
+                description: 'Handheld game console',
+                url: 'https://www.nintendo.com/tw/hardware/detail/switch-oled/index.html'
+              },
+              {
+                image: '/images/uses/others/lp60x.png',
+                name: 'AT-LP60X',
+                description: 'Vinyl record player',
+                url: 'https://www.audio-technica.com.tw/%E9%BB%91%E8%86%A0%E7%94%A2%E5%93%81/%E5%94%B1%E7%9B%A4/at-lp60x-%E5%85%A8%E8%87%AA%E5%8B%95%E6%92%AD%E6%94%BE%E5%9E%8B%E9%BB%91%E8%86%A0%E5%94%B1%E7%9B%A4/'
+              },
+              {
+                image: '/images/uses/others/charging-station.png',
+                name: 'Pisen X EVA [ASUKA & Rei]',
+                description: 'Desktop charging station',
+                url: 'https://www.pisen.com.cn/'
+              }
+            ]}
+          />
+    </section>
+  </div>
+</Layout> 

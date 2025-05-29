@@ -17,17 +17,17 @@ const { isWide = false } = Astro.props
     <slot name="head" />
   </Head>
   <body>
-    <div class="flex h-fit min-h-screen flex-col gap-y-6 font-sans">
+    <div class="box-border flex h-fit min-h-screen flex-col gap-y-6 font-sans">
       <Header />
-      <main class="grow">
-        <div
+      <main class="flex-grow">
+        <!-- <div
           class={cn(
             'mx-auto flex grow flex-col gap-y-6 px-4',
-            !isWide && 'max-w-3xl',
+            !isWide && 'max-w-6xl',
           )}
-        >
+        > -->
           <slot />
-        </div>
+        <!-- </div> -->
       </main>
       <Footer />
     </div>
