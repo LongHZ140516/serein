@@ -24,11 +24,19 @@ pip install voxcity
 ```
 
 ### 1. Download gcloud package
-在我按照环境配置并
-https://cloud.google.com/sdk/docs/install?hl=zh-cn
+
+在我按照环境配置后，我运行脚本发现出现了以下报错：
+
+```shell
+Exception: gcloud command not found. Please ensure that gcloud is installed.
+More information: https://developers.google.com/earth-engine/guides/auth
+```
+
+这意味着经过上面的环境配置，并没有配置好 `gcloud` 的环境。因此，需要去 [gcloud CLI安装指南](https://cloud.google.com/sdk/docs/install?hl=zh-cn#linux) 按照对应的步骤进行 `gcloud` 的安装。
 
 ### 2. Authenticate and initialize Earth Engine
 
+在完成了 `gcloud` 的配置后，接下来就可以在命令行部分运行 `earthengine authenticate`，按照命令行的提示进行 Earth Engine的 authenticate 即可。在完成配置后，可以在命令行再一次输入 `earthengine authenticate`，如果得到 `Authenticate: Credentials already exist.  Use --force to refresh.` 的输出说明已经正确配置成功了。
 
 ### 3. Register Cloud project
 
@@ -42,7 +50,7 @@ https://cloud.google.com/sdk/docs/install?hl=zh-cn
 
 ### 4. Create new project
 
-在完成后即可在 [IAM](https://console.cloud.google.com/iam-admin/iam) 部分选择新建一个新的项目，这里我创建了名为 *voxcity* 的project。同时，需要保证在本地配置的用户信息在该项目中有权限进行访问（在IAM的对应project页面可以对用户访问权限进行控制）。
+在完成后即可在 [IAM](https://console.cloud.google.com/iam-admin/iam) 部分选择新建一个新的项目，这里我创建了名为 `voxcity` 的project。同时，需要保证在本地配置的用户信息在该项目中有权限进行访问（在IAM的对应project页面可以对用户访问权限进行控制）。
 
 ![cloud_project_create](assets/cloud_project_create.jpg)
 
@@ -54,7 +62,7 @@ ee.Authenticate()
 ee.Initialize(project='your-project-id')
 ```
 
-需要注意的是，此处project应该填写的是 **ID** 部分的信息，即 *voxcity-470205*，而非 *voxcity*。否则可能出现以下的报错：
+需要注意的是，此处project应该填写的是 **ID** 部分的信息，即 `voxcity-470205`，而非 `voxcity`。否则可能出现以下的报错：
 
 ```shell
 ee.ee_exception.EEException: Caller does not have required permission to use project voxcity. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam/project?project=voxcity and then retry. Propagation of the new permission may take a few minutes.
@@ -79,6 +87,7 @@ voxcity_grid, building_height_grid, building_min_height_grid, building_id_grid, 
 ```
 
 在数据下载的过程中，可能会出现下面的几个报错：
+
 ```shell
 # Error 1
 ...
@@ -92,11 +101,11 @@ ee.ee_exception.EEException: Asset "projects/voxcity-470205/assets" not found.
 ee.ee_exception.EEException: ee.Initialize: no project found. Call with project= or see http://goo.gle/ee-auth.
 ```
 
-起初我并没有太理解为什么会出现这些报错，我以为是project权限的问题导致对应的assets文件夹无法进行访问。经过排查，最终发现，问题出在 [GEE平台](https://code.earthengine.google.com/) 上。由于起初并没有添加创建的 *voxcity-470205 project* 到 cloud assets 中，导致了上面的报错。
+起初我并没有太理解为什么会出现这些报错，我以为是project权限的问题导致对应的assets文件夹无法进行访问。经过排查，最终发现，问题出在 [GEE平台](https://code.earthengine.google.com/) 上。由于起初并没有添加创建的 `voxcity-470205` project 到 cloud assets 中，导致了上面的报错。
 
 ![GEE_cloud_assets](assets/GEE_cloud_assets.jpg)
 
-因此，为了添加 *voxcity-470205 project* 到 cloud assets中，仅需要点击 **ADD A PROJECT** 按钮，选择你需要添加的 Project 名称，最后点击 **Select** 即可完成正确的添加。这样就可以正常通过GEE API进行数据下载了。
+因此，为了添加 `voxcity-470205` project 到 cloud assets中，仅需要点击 **ADD A PROJECT** 按钮，选择你需要添加的 Project 名称，最后点击 **Select** 即可完成正确的添加。这样就可以正常通过GEE API进行数据下载了。
 
 ![GEE_cloud_project_add](assets/GEE_cloud_project_add.jpg)
 
