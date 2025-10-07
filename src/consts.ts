@@ -4,7 +4,7 @@ export const SITE: Site = {
   title: 'serein',
   description:
     'serein',
-  href: 'https://astro-erudite.vercel.app',
+  href: 'https://serein-six.vercel.app',
   author: 'serein',
   locale: 'en-US',
   featuredPostCount: 2,
