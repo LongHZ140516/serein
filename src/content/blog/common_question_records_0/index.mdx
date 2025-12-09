@@ -1,0 +1,80 @@
+---
+title: "日常遇到的问题记录 #0"
+description: "日常总会遇到一些奇奇怪怪的小问题，随手记录一下，方便以后再次遇到后可以轻松解决"
+date: 2025-12-09
+tags: ["vscode", "python", "gradio"]
+image: "./banner.jpg"
+authors: ["serein"]
+---
+
+## Introduction
+
+最近遇到几个小问题，虽然不是很难，但是遇到就非常烦人，所以顺手记录一下。主要遇到的问题是下面的三个：
+
+- **Issue 1:** jupyter notebook中select kernel完全无法加载出kernel选项
+- **Issue 2:** gradio使用时，设置了 `share=True` 后，在服务器部署后依然无法正常在本地打开网址
+- **Issue 3:** pip install 由于设置的时镜像源，导致无法正常install
+
+
+## Solution
+
+### Issue 1: jupyter notebook中select kernel完全无法加载出kernel选项
+
+![issue_1](assets/issue_1.png)
+
+在更新vscode后，最近跑了下 [SAM3D](https://github.com/facebookresearch/sam-3d-objects) 的代码，在运行里面的 `ipynb` 文件的代码的时候，发现在 `select kernel` 时候一直无法加载出环境的 kernel选项，但是之前完全没遇到过这种怪问题。哪怕重开 vscode、重新安装 jupyter 插件 也没办法解决。最后自己尝试下来的解决方法如下：
+
+1. 首先确定本地 vscode 的环境中正常安装了 jupyter 的几个 extensions，确保基础的插件已经安装。
+   ![jupyter_extension](assets/extension_jupyter.png)
+2. vscode 中按下快捷键 Ctrl+Shift+P，搜索 Python：Install the Jupyter extension，并进行安装。
+   ![jupyter_install](assets/install_jupyter.png)
+3. 如果上述步骤进行后依然存在问题，可以对 jupyter 这一个 extension 进行 **升级 or 降级** 处理。我在进行降级处理后便恢复了正常。
+   ![jupyter_specific](assets/specific_install.png)
+
+### Issue 2: gradio使用时，设置了 `share=True` 后，在服务器部署后依然无法正常在本地打开网址
+
+同样是在跑 [SAM3D](https://github.com/facebookresearch/sam-3d-objects) 的 ipynb 脚本的时候遇到的。主要是在运行 `visualize_meshes_interactive`时，明明设置了`share=True`，让gradio能够分享链接。但是却出现了下面的问题：
+
+```
+Could not create share link. Please check your internet connection or our status page: https://status.gradio.app.
+```
+
+可是`frpc_linux_amd64_v0.3`的文件路径没问题，那是什么问题呢？解决办法很简单，只需要对其权限进行修改即可：
+
+```
+chmod +x /data/xxxxx/.cache/huggingface/gradio/frpc/frpc_linux_amd64_v0.3
+```
+
+在修改好文件的权限后，再次运行后就可以正常分享了。如果还是无法分享，可以考虑使用 `sudo` 去修改权限，大概率就可以正常分享了。
+
+### Issue 3: pip install 由于设置的时镜像源，导致无法正常install
+
+在 pip 的时候往往我都使用的是镜像源（比如我设置的是阿里云的镜像源），但是设置镜像源后可能在 install 的时候会出现以下的 WARNING：
+
+```
+WARNING: The repository located at mirrors.aliyun.com is not a trusted or secure host and is being ignored. If this repository is available via HTTPS we recommend you use HTTPS instead, otherwise you may silence this warning and allow it anyway with '--trusted-host mirrors.aliyun.com'.
+```
+
+这样的问题可能导致无法正常 install。当然，这个问题其实 WARNING 的信息中已经给了一个解决方案了，也就是在进行 `pip install`的时候，在后面加上 `--trusted-host mirrors.aliyun.com` 即可。
+
+但这样也有个问题，我总不可能每次 install 的时候都得加上这段字符吧，这也太麻烦了。有没有一劳永逸的方法呢？有的兄弟，有的。可以直接通过修改 `pip.conf` 的信息，比如按照下面这一段在终端进行设置：
+
+```
+pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+```
+
+那么再去查看 `pip.conf` 文件的时候，就会发现 `index-url` 已经变成我们设置的那个了。
+
+```
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+```
+
+当然，可能我们并不想把全局的 `index-url` 进行修改，那么其实在 `pip.conf` 中也可以进行 `trust-host` 的设置。我们也可以在里面直接对 `trust-host` 的信息提前设置好，那么就不会出现上面的问题了。
+
+```
+[global]
+...
+trusted-host = 
+	mirrors.aliyun.com/pypi/simple/
+```
