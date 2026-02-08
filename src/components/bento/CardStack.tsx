@@ -20,8 +20,8 @@ interface CardStackProps {
   useAutoGeneration?: boolean;
 }
 
-const CardStack: React.FC<CardStackProps> = ({ 
-  cardOffset = CARD_OFFSET, 
+const CardStack: React.FC<CardStackProps> = ({
+  cardOffset = CARD_OFFSET,
   rotationFactor = ROTATION_FACTOR,
   maxPhotos = 6,
   useAutoGeneration = true
@@ -55,10 +55,7 @@ const CardStack: React.FC<CardStackProps> = ({
   useEffect(() => {
     const allPhotos = getAllPhotos(useAutoGeneration, maxPhotos);
     const currentPhotos = allPhotos[theme];
-    
-    console.log('Current theme:', theme);
-    console.log('Photos for theme:', currentPhotos);
-    
+
     const initialCards = currentPhotos.map((photo, index) => ({
       ...photo,
       rotation: (index % 2 === 0 ? 1 : -1) * rotationFactor * (0.5 + Math.random() * 0.5),
@@ -81,18 +78,16 @@ const CardStack: React.FC<CardStackProps> = ({
   };
 
   const handleImageLoad = (cardId: number) => {
-    console.log('Image loaded successfully:', cardId);
-    setCards(prevCards => 
-      prevCards.map(card => 
+    setCards(prevCards =>
+      prevCards.map(card =>
         card.id === cardId ? { ...card, isLoaded: true } : card
       )
     );
   };
 
   const handleImageError = (cardId: number, imagePath: string) => {
-    console.log('Image failed to load:', cardId, imagePath);
-    setCards(prevCards => 
-      prevCards.map(card => 
+    setCards(prevCards =>
+      prevCards.map(card =>
         card.id === cardId ? { ...card, hasError: true } : card
       )
     );
@@ -107,7 +102,7 @@ const CardStack: React.FC<CardStackProps> = ({
         <Images className='size-[15px]' />
         <h2 className='text-sm font-light'>Gallery</h2>
       </div> */}
-      
+
       <div className="flex-1 flex justify-center items-center relative">
         <ul className="relative w-full h-full flex justify-center items-center">
           {validCards.map((card, index) => (
@@ -124,9 +119,8 @@ const CardStack: React.FC<CardStackProps> = ({
               <div className="relative overflow-hidden rounded-2xl border-2 border-border/20 shadow-lg">
                 <img
                   alt={card.alt}
-                  className={`object-cover w-[180px] h-[180px] md:w-[200px] md:h-[200px] transition-opacity duration-300 ${
-                    card.isLoaded ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  className={`object-cover w-[180px] h-[180px] md:w-[200px] md:h-[200px] transition-opacity duration-300 ${card.isLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
                   src={card.imagePath}
                   loading="lazy"
                   onLoad={() => handleImageLoad(card.id)}
@@ -142,7 +136,7 @@ const CardStack: React.FC<CardStackProps> = ({
             </li>
           ))}
         </ul>
-        
+
         {validCards.length === 0 && (
           <div className="flex flex-col items-center justify-center text-muted-foreground">
             <Images className="size-12 mb-2 opacity-50" />

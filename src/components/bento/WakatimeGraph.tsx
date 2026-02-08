@@ -104,22 +104,22 @@ const WakatimeGraph = () => {
 
     // listen theme change
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class') {
-                const isDark = document.documentElement.classList.contains('dark')
-                setTheme(isDark ? 'dark' : 'light')
-            }
-        })
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const isDark = document.documentElement.classList.contains('dark')
+          setTheme(isDark ? 'dark' : 'light')
+        }
+      })
     })
 
     observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
+      attributes: true,
+      attributeFilter: ['class']
     })
 
     // clean up listeners
     return () => {
-        observer.disconnect()
+      observer.disconnect()
     }
   }, [])
 
@@ -152,7 +152,7 @@ const WakatimeGraph = () => {
       .then(data => {
         const processLanguages = data.data
           .slice(0, 7)
-          .map( (lang: { name: string, hours: number }, index: number) => ({
+          .map((lang: { name: string, hours: number }, index: number) => ({
             name: lang.name,
             hours: Number(lang.hours.toFixed(2)),
             fill: themeColors[theme][index % themeColors[theme].length]
@@ -165,29 +165,29 @@ const WakatimeGraph = () => {
         setLoading(false)
       })
   }, [theme])
-  
+
   const CustomYAxisTick = ({ x, y, payload }: any) => {
     const icon = getLanguageIcon(payload.value.toLowerCase())
     return (
       <g transform={`translate(${x},${y})`}>
         <title>{payload.value}</title>
         <circle cx="-18" cy="0" r="14" fill={iconBG[theme]} />
-        <foreignObject width={16} height={16} x={-26} y={-8}>
-          {icon ? (
-            React.cloneElement(icon, { size: 16, color: iconFill[theme] })
-          ) : (
-            <text
-              x={8}
-              y={12}
-              fill="#E9D3B6"
-              fontSize="12"
-              textAnchor="middle"
-              dominantBaseline="central"
-            >
-              {payload.value.charAt(0).toUpperCase()}
-            </text>
-          )}
-        </foreignObject>
+        {icon ? (
+          <foreignObject width={16} height={16} x={-26} y={-8}>
+            {React.cloneElement(icon, { size: 16, color: iconFill[theme] })}
+          </foreignObject>
+        ) : (
+          <text
+            x={-18}
+            y={0}
+            fill="#E9D3B6"
+            fontSize="12"
+            textAnchor="middle"
+            dominantBaseline="central"
+          >
+            {payload.value.charAt(0).toUpperCase()}
+          </text>
+        )}
       </g>
     )
   }
