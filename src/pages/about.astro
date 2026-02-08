@@ -1,57 +1,255 @@
 ---
+import AboutProjectCard from '@/components/AboutProjectCard.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
-import ProjectCard from '@/components/ProjectCard.astro'
+import PublicationCard from '@/components/PublicationCard.astro'
+import SocialLinks from '@/components/SocialLinks.astro'
+import TimelineItem from '@/components/TimelineItem.astro'
+import { Badge } from '@/components/ui/badge'
 import Layout from '@/layouts/Layout.astro'
-import { getAllProjects } from '@/lib/data-utils'
+import { getCollection, getEntry } from 'astro:content'
 
-const projects = await getAllProjects()
+const title = 'About'
+const description = 'About me'
+
+// Fetch profile data from content
+const profileEntry = await getEntry('profile', 'about')
+const profileData = profileEntry?.data || {
+  name: 'Your Name',
+  avatar: '/favicon.svg',
+  bio: 'Your bio here',
+  tags: [],
+  socials: [],
+  timeline: [],
+  news: [],
+}
+
+const { name, avatar, bio, tags, socials, timeline, news } = profileData
+
+// Fetch publications
+const publications = await getCollection('publications')
+const sortedPublications = publications.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+)
+
+// Fetch projects from projects collection
+const projectsCollection = await getCollection('projects')
+const projects = projectsCollection.map((p) => ({
+  name: p.data.name,
+  description: p.data.description,
+  image: p.data.image,
+  url: p.data.link,
+  githubRepo: p.data.githubRepo,
+}))
 ---
 
 <Layout>
-  <PageHead slot="head" title="About" />
-  <div class="mx-auto max-w-screen-md px-4 flex flex-col gap-y-6">
-  <Breadcrumbs items={[{ label: 'About', icon: 'lucide:info' }]} />
+  <PageHead slot="head" title={title} description={description} />
 
-  <section class="flex grow flex-col gap-y-6">
-    <div class="min-w-full">
-      <div class="prose mb-8">
-        <p class="mb-4">
-          astro-erudite is an opinionated, unstyled static blogging template
-          that prioritizes simplicity and performance, built with <Link
-            href="https://astro.build"
-            class="text-foreground"
-            external
-            underline>Astro</Link
-          >, <Link
-            href="https://tailwindcss.com"
-            class="text-foreground"
-            external
-            underline>Tailwind</Link
-          >, and <Link
-            href="https://ui.shadcn.com"
-            class="text-foreground"
-            external
-            underline>shadcn/ui</Link
-          >. It provides a clean foundation for your content while being
-          extremely easy to customize.
-        </p>
-        <p>
-          To learn more about the philosophy behind this template, check out the
-          following blog post: <Link
-            href="/blog/the-state-of-static-blogs"
-            class="text-foreground"
-            underline>The State of Static Blogs in 2024</Link
-          >.
-        </p>
+  {/* Floating Profile Sidebar - Absolutely positioned outside main layout */}
+  <aside
+    class="profile-sidebar border-border fixed top-32 left-[calc(50%-28rem-12rem)] hidden min-h-[50vh] w-60 flex-col items-center border-r pr-6 xl:flex"
+  >
+    <div class="flex w-full flex-col items-center text-center">
+      {/* Avatar */}
+      <div class="mb-4 size-28 overflow-hidden rounded-full">
+        <img
+          src={avatar}
+          alt={name}
+          class="size-full rounded-full object-cover"
+        />
       </div>
 
-      <h2 class="mb-4 text-2xl font-medium">Example Projects Listing</h2>
-      <div class="flex flex-col gap-4">
-        {projects.map((project) => <ProjectCard project={project} />)}
+      {/* Name */}
+      <h2 class="mb-2 text-xl font-bold">{name}</h2>
+
+      {/* Bio */}
+      <p class="text-muted-foreground mb-4 text-sm leading-relaxed">{bio}</p>
+
+      {/* Tags */}
+      {
+        tags && tags.length > 0 && (
+          <div class="mb-4 flex flex-wrap justify-center gap-2">
+            {tags.map((tag: string) => (
+              <Badge variant="secondary" class="text-xs">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )
+      }
+
+      {/* Social Links */}
+      {socials && socials.length > 0 && <SocialLinks links={socials} />}
+    </div>
+  </aside>
+
+  {/* Main Content - Centered layout like other pages */}
+  <div class="mx-auto flex max-w-screen-md flex-col gap-y-5 px-4">
+    <Breadcrumbs items={[{ label: 'About', icon: 'lucide:user' }]} />
+
+    {/* Mobile Profile Card - Only visible on smaller screens */}
+    <div class="mb-8 xl:hidden">
+      <div
+        class="border-border flex flex-col items-center border-b py-6 text-center"
+      >
+        <div class="mb-4 size-20 overflow-hidden rounded-full">
+          <img
+            src={avatar}
+            alt={name}
+            class="size-full rounded-full object-cover"
+          />
+        </div>
+        <h2 class="mb-2 text-xl font-bold">{name}</h2>
+        <p class="text-muted-foreground mb-4 text-sm">{bio}</p>
+        {
+          tags && tags.length > 0 && (
+            <div class="mb-4 flex flex-wrap justify-center gap-2">
+              {tags.map((tag: string) => (
+                <Badge variant="secondary" class="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )
+        }
+        {socials && socials.length > 0 && <SocialLinks links={socials} />}
       </div>
     </div>
-  </section>
+
+    <section class="flex grow flex-col gap-y-8">
+      <div class="min-w-full">
+        {/* About Section */}
+        {
+          timeline && timeline.length > 0 && (
+            <div class="mb-10">
+              <h2 class="mb-6 text-2xl font-bold">About</h2>
+              <div class="space-y-0">
+                {timeline.map((item: any) => (
+                  <TimelineItem
+                    title={item.title}
+                    subtitle={item.subtitle}
+                    dateRange={item.dateRange}
+                    logo={item.logo}
+                    description={item.description}
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        {/* News Section - Collapsible */}
+        {
+          news && news.length > 0 && (
+            <details class="group mb-10" open>
+              <summary class="mb-6 flex cursor-pointer list-none items-center gap-2 text-2xl font-bold">
+                <span>News</span>
+                <svg
+                  class="text-muted-foreground size-5 transition-transform group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </summary>
+              <div class="space-y-3">
+                {news.map((item: any) => (
+                  <div class="border-border bg-card/50 flex gap-4 rounded-lg border p-4">
+                    <span class="text-muted-foreground flex-shrink-0 text-sm font-medium">
+                      {item.date}
+                    </span>
+                    <p
+                      class="[&_a]:text-primary text-sm [&_a]:underline [&_strong]:font-semibold"
+                      set:html={item.content}
+                    />
+                  </div>
+                ))}
+              </div>
+            </details>
+          )
+        }
+
+        {/* Publications Section - Collapsible */}
+        {
+          sortedPublications.length > 0 && (
+            <details class="group mb-10" open>
+              <summary class="mb-6 flex cursor-pointer list-none items-center gap-2 text-2xl font-bold">
+                <span>Publications</span>
+                <svg
+                  class="text-muted-foreground size-5 transition-transform group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </summary>
+              <div class="space-y-4">
+                {sortedPublications.map((pub) => (
+                  <PublicationCard publication={pub} />
+                ))}
+              </div>
+            </details>
+          )
+        }
+
+        {/* Projects Section - Collapsible */}
+        {
+          projects && projects.length > 0 && (
+            <details class="group mb-10" open>
+              <summary class="mb-6 flex cursor-pointer list-none items-center gap-2 text-2xl font-bold">
+                <span>Projects</span>
+                <svg
+                  class="text-muted-foreground size-5 transition-transform group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </summary>
+              <div class="grid gap-4 sm:grid-cols-2">
+                {projects.map((project: any) => (
+                  <AboutProjectCard
+                    name={project.name}
+                    description={project.description}
+                    image={project.image}
+                    url={project.url}
+                    githubRepo={project.githubRepo}
+                  />
+                ))}
+              </div>
+            </details>
+          )
+        }
+      </div>
+    </section>
   </div>
 </Layout>
+
+<style>
+  .profile-sidebar {
+    max-height: calc(100vh - 8rem);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

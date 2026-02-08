@@ -1,0 +1,149 @@
+---
+import Link from '@/components/Link.astro'
+import { buttonVariants } from '@/components/ui/button'
+import { Icon } from 'astro-icon/components'
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+    publication: CollectionEntry<'publications'>
+}
+
+const { publication } = Astro.props
+const {
+    title,
+    venue,
+    venueColor,
+    authors,
+    image,
+    paperUrl,
+    githubUrl,
+    projectUrl,
+} = publication.data
+
+const isUrlImage = typeof image === 'string'
+---
+
+<article
+    class="group/pub border-border bg-card/50 hover:bg-secondary/30 rounded-xl border p-4 transition-colors duration-200"
+>
+    <div class="flex gap-4">
+        {/* Thumbnail */}
+        {
+            image && (
+                <div class="hidden flex-shrink-0 sm:block">
+                    {isUrlImage ? (
+                        <img
+                            src={image}
+                            alt={title}
+                            class="h-24 w-40 rounded-lg object-cover"
+                            loading="lazy"
+                        />
+                    ) : (
+                        <Image
+                            src={image}
+                            alt={title}
+                            width={320}
+                            height={180}
+                            class="h-24 w-40 rounded-lg object-cover"
+                            loading="lazy"
+                        />
+                    )}
+                </div>
+            )
+        }
+
+        {/* Content */}
+        <div class="flex-grow">
+            {/* Venue Badge */}
+            <span
+                class="venue-badge bg-secondary text-secondary-foreground mb-2 inline-block rounded-md px-2 py-1 text-xs font-medium"
+                style={venueColor
+                    ? `background-color: ${venueColor}; color: white;`
+                    : undefined}
+            >
+                {venue}
+            </span>
+
+            {/* Title */}
+            <h3
+                class="group-hover/pub:text-primary mb-2 text-lg leading-snug font-semibold transition-colors"
+            >
+                {title}
+            </h3>
+
+            {/* Authors */}
+            <p class="text-muted-foreground mb-3 text-sm">
+                {
+                    authors.map((author: string, index: number) => (
+                        <>
+                            {author.toLowerCase().includes('zilong huang') ? (
+                                <strong class="text-foreground font-semibold">
+                                    {author}
+                                </strong>
+                            ) : (
+                                author
+                            )}
+                            {index < authors.length - 1 && ', '}
+                        </>
+                    ))
+                }
+            </p>
+
+            {/* Action Buttons */}
+            <div class="flex flex-wrap gap-2">
+                {
+                    paperUrl && (
+                        <Link
+                            href={paperUrl}
+                            class={
+                                buttonVariants({
+                                    variant: 'outline',
+                                    size: 'sm',
+                                }) + ' gap-1.5'
+                            }
+                            external
+                        >
+                            <Icon name="lucide:file-text" class="size-3.5" />
+                            Paper
+                        </Link>
+                    )
+                }
+                {
+                    githubUrl && (
+                        <Link
+                            href={githubUrl}
+                            class={
+                                buttonVariants({
+                                    variant: 'outline',
+                                    size: 'sm',
+                                }) + ' gap-1.5'
+                            }
+                            external
+                        >
+                            <Icon name="lucide:github" class="size-3.5" />
+                            Code
+                        </Link>
+                    )
+                }
+                {
+                    projectUrl && (
+                        <Link
+                            href={projectUrl}
+                            class={
+                                buttonVariants({
+                                    variant: 'outline',
+                                    size: 'sm',
+                                }) + ' gap-1.5'
+                            }
+                            external
+                        >
+                            <Icon name="lucide:globe" class="size-3.5" />
+                            Project
+                        </Link>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</article>

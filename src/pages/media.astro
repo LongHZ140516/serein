@@ -1,0 +1,71 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import MediaSection from '@/components/MediaSection.astro'
+import PageHead from '@/components/PageHead.astro'
+import Layout from '@/layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const title = 'Media'
+const description =
+    'Books, movies, TV series, anime, music, and games that I love.'
+
+// Fetch all media content
+const allMedia = await getCollection('media')
+
+// Group by type
+const books = allMedia.filter((item) => item.data.type === 'book')
+const movies = allMedia.filter((item) => item.data.type === 'movie')
+const tvShows = allMedia.filter((item) => item.data.type === 'tv')
+const anime = allMedia.filter((item) => item.data.type === 'anime')
+const music = allMedia.filter((item) => item.data.type === 'music')
+const games = allMedia.filter((item) => item.data.type === 'game')
+---
+
+<Layout>
+    <PageHead slot="head" title={title} description={description} />
+    <div class="mx-auto flex max-w-screen-md flex-col gap-y-5 px-4">
+        <Breadcrumbs
+            items={[{ label: 'Media', icon: 'lucide:clapperboard' }]}
+        />
+
+        <section class="flex grow flex-col gap-y-8">
+            <div class="min-w-full">
+                <div class="prose max-w-none">
+                    <MediaSection title="Anime" icon="🎌" items={anime} />
+                    <MediaSection title="Movies" icon="🎬" items={movies} />
+                    <MediaSection title="TV Series" icon="📺" items={tvShows} />
+                    <MediaSection title="Games" icon="🎮" items={games} />
+                    {
+                        books.length > 0 && (
+                            <MediaSection
+                                title="Books"
+                                icon="📚"
+                                items={books}
+                            />
+                        )
+                    }
+                    {
+                        music.length > 0 && (
+                            <MediaSection
+                                title="Music"
+                                icon="🎵"
+                                items={music}
+                            />
+                        )
+                    }
+                </div>
+
+                {
+                    allMedia.length === 0 && (
+                        <div class="text-muted-foreground py-16 text-center">
+                            <p class="text-lg">No content yet</p>
+                            <p class="mt-2 text-sm">
+                                More content will be added soon
+                            </p>
+                        </div>
+                    )
+                }
+            </div>
+        </section>
+    </div>
+</Layout>

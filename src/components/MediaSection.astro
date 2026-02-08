@@ -1,0 +1,28 @@
+---
+import MediaCoverCard from '@/components/MediaCoverCard.astro'
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+    title: string
+    icon: string
+    items: CollectionEntry<'media'>[]
+}
+
+const { title, icon, items } = Astro.props
+---
+
+{
+    items.length > 0 && (
+        <section class="mb-12">
+            <h2 class="mb-6 flex items-center gap-3 text-2xl font-bold">
+                <span class="text-3xl">{icon}</span>
+                {title}
+            </h2>
+            <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+                {items.map((item) => (
+                    <MediaCoverCard item={item} />
+                ))}
+            </div>
+        </section>
+    )
+}

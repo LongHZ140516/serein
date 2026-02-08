@@ -24,10 +24,14 @@ export const NAV_LINKS: SocialLink[] = [
     href: '/uses',
     label: 'uses',
   },
-  // {
-  //   href: '/about',
-  //   label: 'about',
-  // },
+  {
+    href: '/media',
+    label: 'media',
+  },
+  {
+    href: '/about',
+    label: 'about',
+  },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [
