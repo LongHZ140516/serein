@@ -1,7 +1,7 @@
 ---
 title: "MajutsuCity: Language-driven Aesthetic-adaptive City Generation with Controllable 3D Assets and Layouts"
-venue: "arXiv 2025"
-venueColor: "#ff422dff"
+venue: "CVPR 2026"
+venueColor: "#4285f4"
 authors: 
   - "Zilong Huang"
   - "Jun He"

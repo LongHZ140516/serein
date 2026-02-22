@@ -52,6 +52,8 @@ timeline:
 # News & Updates
 news:
   - date: "2026.02"
+    content: "🎉 <a href='https://arxiv.org/abs/2511.20415'>MajutsuCity</a> is accepted by <strong>CVPR 2026</strong> !"
+  - date: "2026.02"
     content: "🎉 <a href='https://openreview.net/forum?id=OtLC2JNGZf'>UrbanFeel</a> is accepted by <strong>ICLR 2026</strong> !"
   - date: "2025.09"
     content: "🎉 <a href='https://neurips.cc/virtual/2025/loc/san-diego/poster/121522'>Blink-Twice</a> is accepted by <strong>NeurIPS 2025 D&B</strong> !"
